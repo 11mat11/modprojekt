@@ -1,0 +1,31 @@
+html() ::= <<
+<!DOCTYPE html>
+<html>
+<head>
+$head$
+</head>
+<body>
+$body$
+</body>
+</html>
+>>
+
+head() ::= <<
+$elements; separator="\n"$
+>>
+
+body() ::= <<
+$elements; separator="\n"$
+>>
+
+h1(content) ::= <<
+<h1>$content$</h1>
+>>
+
+p(content) ::= <<
+<p>$content; separator=" "$</p>
+>>
+
+text(content) ::= <<
+$content$
+>>
