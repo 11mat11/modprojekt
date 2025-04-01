@@ -1,31 +1,76 @@
-html() ::= <<
+delimiters "«", "»"
+
+program(head, body) ::= <<
 <!DOCTYPE html>
 <html>
 <head>
-$head$
+«head»
 </head>
 <body>
-$body$
+«body»
 </body>
 </html>
 >>
 
-head() ::= <<
-$elements; separator="\n"$
+head(elements) ::= <<
+«elements; separator="\n"»
 >>
 
-body() ::= <<
-$elements; separator="\n"$
+body(elements) ::= <<
+«elements; separator="\n"»
 >>
 
-h1(content) ::= <<
-<h1>$content$</h1>
+metaElement(content) ::= <<
+<meta charset="«content»">
 >>
 
-p(content) ::= <<
-<p>$content; separator=" "$</p>
+titleElement(content) ::= <<
+<title>«content»</title>
 >>
 
-text(content) ::= <<
-$content$
+paragraphElement(content) ::= <<
+<p>«content»</p>
+>>
+baseElement(url) ::= <<
+<base href="«url»">
+>>
+
+linkElement(href) ::= <<
+<link rel="stylesheet" href="«href»">
+>>
+
+styleElement(styles) ::= <<
+<style>«styles»</style>
+>>
+
+heading(level, text) ::= <<
+<h«level»>«text»</h«level»>
+>>
+
+divElement(content) ::= <<
+<div>«content»</div>
+>>
+
+hyperlinkElement(url, text) ::= <<
+<a href="«url»">«text»</a>
+>>
+
+imageElement(src, alt) ::= <<
+<img src="«src»" alt="«alt»">
+>>
+
+textFormat(tag, content) ::= <<
+<«tag»>«content»</«tag»>
+>>
+
+lineBreak() ::= <<
+<br>
+>>
+
+codeElement(code) ::= <<
+<code>«code»</code>
+>>
+
+plainText(text) ::= <<
+«text»
 >>

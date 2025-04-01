@@ -1,12 +1,11 @@
-package compiler;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import compiler.StartCompiler; // Importujemy klasę StartCompiler
 
 public class CodeEditorApp extends JFrame {
     private JTextArea codeArea;
@@ -22,7 +21,7 @@ public class CodeEditorApp extends JFrame {
 
         // Podział na edytor i podgląd HTML
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        
+
         // Edytor kodu
         codeArea = new JTextArea();
         JScrollPane editorScrollPane = new JScrollPane(codeArea);
@@ -47,6 +46,32 @@ public class CodeEditorApp extends JFrame {
         });
 
         add(runButton, BorderLayout.SOUTH);
+
+        // Wczytaj pliki na starcie
+        loadFiles();
+    }
+
+    private void loadFiles() {
+        try {
+            // Wczytaj `input.p32`
+            if (Files.exists(Paths.get(INPUT_FILE))) {
+                String inputCode = new String(Files.readAllBytes(Paths.get(INPUT_FILE)));
+                codeArea.setText(inputCode);
+            } else {
+                codeArea.setText(""); // Jeśli pliku nie ma, pusty edytor
+            }
+
+            // Wczytaj `output.html`
+            if (Files.exists(Paths.get(OUTPUT_FILE))) {
+                String htmlOutput = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
+                htmlViewer.setText(htmlOutput);
+            } else {
+                htmlViewer.setText("<p>Brak wygenerowanego HTML</p>");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            htmlViewer.setText("<p>Błąd wczytywania plików</p>");
+        }
     }
 
     private void compileAndDisplay() {
@@ -56,16 +81,11 @@ public class CodeEditorApp extends JFrame {
             // Zapisz kod do input.p32
             Files.write(Paths.get(INPUT_FILE), code.getBytes());
 
-            // Uruchom kompilator (StartCompiler)
-            Process process = new ProcessBuilder("java", "-cp", "src", "compiler.StartCompiler")
-                    .redirectErrorStream(true)
-                    .start();
+            // Uruchom kompilator StartCompiler
+            StartCompiler.main(new String[0]); // Wywołaj metodę main z StartCompiler
 
-            process.waitFor(); // Czekamy na zakończenie kompilacji
-
-            // Wczytaj wygenerowany plik HTML
-            String htmlOutput = new String(Files.readAllBytes(Paths.get(OUTPUT_FILE)));
-            htmlViewer.setText(htmlOutput);
+            // Wczytaj wynikowy plik HTML
+            loadFiles();
 
         } catch (Exception ex) {
             ex.printStackTrace();

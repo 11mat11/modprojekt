@@ -1,4 +1,4 @@
-package compilar;
+package compiler;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -29,7 +29,7 @@ public class StartCompiler {
         STGroup group = new STGroupFile("src/compiler/templates.stg");
         EmitVisitor visitor = new EmitVisitor(group);
         ST result = visitor.visit(tree);
-        
+
         try (FileWriter writer = new FileWriter("output.html")) {
             writer.write(result.render());
         } catch (IOException e) {

@@ -1,0 +1,15 @@
+|{
+@ "https://example.com" /@
+? "styles.css" /?
+` "body {color: red}" /`
+}|
+!{
+# "Nagłówek"
+? "https://example.com" /| "Kliknij mnie!" /?
+= "image.jpg" /| "Logo" /=
+^ "Pogrubienie" /^
+_ "Kursywa" /_
+##"no co "+ ##"tam"
+` "console.log('test')" /`
+"Zwykły tekst"
+}!
