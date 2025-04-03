@@ -5,9 +5,12 @@ import grammar.p32BaseVisitor;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class EmitVisitor extends p32BaseVisitor<ST> {
     private final STGroup templates;
-
+    private int formLabelCounter = 0;
     public EmitVisitor(STGroup templates) {
         this.templates = templates;
     }
@@ -53,14 +56,6 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
                 .add("content", content);
     }
 
-    // Paragraph element
-    @Override
-    public ST visitParagraphElement(p32Parser.ParagraphElementContext ctx) {
-        StringBuilder content = new StringBuilder();
-        ctx.content().forEach(c -> content.append(cleanString(c.getText())));
-        return templates.getInstanceOf("paragraphElement")
-                .add("content", content.toString());
-    }
     // Base element (head)
     @Override
     public ST visitBaseElement(p32Parser.BaseElementContext ctx) {
@@ -82,12 +77,26 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
         return templates.getInstanceOf("styleElement").add("styles", styles);
     }
 
-    // Div element
+    // Przykładowe poprawki dla kilku elementów:
+    @Override
+    public ST visitParagraphElement(p32Parser.ParagraphElementContext ctx) {
+        ST paragraph = templates.getInstanceOf("paragraphElement");
+        ctx.content().forEach(c -> paragraph.add("content", visit(c)));
+        return paragraph;
+    }
+
     @Override
     public ST visitDivElement(p32Parser.DivElementContext ctx) {
-        StringBuilder content = new StringBuilder();
-        ctx.content().forEach(c -> content.append(cleanString(c.getText())));
-        return templates.getInstanceOf("divElement").add("content", content.toString());
+        ST div = templates.getInstanceOf("divElement");
+        ctx.content().forEach(c -> div.add("content", visit(c)));
+        return div;
+    }
+
+    @Override
+    public ST visitSpanElement(p32Parser.SpanElementContext ctx) {
+        ST span = templates.getInstanceOf("spanElement");
+        ctx.content().forEach(c -> span.add("content", visit(c)));
+        return span;
     }
 
     // Hyperlink element
@@ -110,22 +119,16 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
                 .add("alt", alt);
     }
 
-    // Text formatting
     @Override
     public ST visitBoldText(p32Parser.BoldTextContext ctx) {
-        return formatTextElement(ctx.STRING().getText(), "strong");
+        String content = cleanString(ctx.STRING().getText());
+        return templates.getInstanceOf("boldText").add("content", content);
     }
 
     @Override
     public ST visitItalicText(p32Parser.ItalicTextContext ctx) {
-        return formatTextElement(ctx.STRING().getText(), "em");
-    }
-
-    private ST formatTextElement(String input, String tag) {
-        String text = cleanString(input);
-        return templates.getInstanceOf("textFormat")
-                .add("tag", tag)
-                .add("content", text);
+        String content = cleanString(ctx.STRING().getText());
+        return templates.getInstanceOf("italicText").add("content", content);
     }
 
     // Line break
@@ -167,5 +170,128 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
         return input.substring(1, input.length() - 1)
                 .replace("\"", "")
                 .replace("\"", "");
+    }
+    @Override
+    public ST visitFormElement(p32Parser.FormElementContext ctx) {
+        ST formElement = templates.getInstanceOf("formElement");
+        ctx.content().forEach(element -> formElement.add("elements", visit(element)));
+        return formElement;
+    }
+
+//    @Override
+//    public ST visitFormContent(p32Parser.FormContentContext ctx) {
+//        ST formContent = templates.getInstanceOf("formContent");
+//        formContent.add("name", ctx.name.getText()).add("type", ctx.type.getText()).add("label_name", ctx.label_name.getText()).add("id", "form_" + formLabelCounter++);
+//        return formContent;
+//    }
+
+    @Override
+    public ST visitFormField(p32Parser.FormFieldContext ctx) {
+        ST formContent = templates.getInstanceOf("formField");
+        formContent.add("name", ctx.name.getText()).add("type", ctx.type.getText()).add("id", "form_" + formLabelCounter++);
+        if (ctx.label_name != null) {
+            formContent.add("label_name", cleanString(ctx.label_name.getText()));
+        }
+        return formContent;
+    }
+
+    @Override
+    public ST visitFormButton(p32Parser.FormButtonContext ctx) {
+        ST formContent = templates.getInstanceOf("formButton");
+        formContent.add("value", ctx.value.getText()).add("type", ctx.type.getText());
+        return formContent;
+    }
+
+    @Override
+    public ST visitFormCheckBoxRadio(p32Parser.FormCheckBoxRadioContext ctx) {
+        ST formContent = templates.getInstanceOf("formCheckBoxRadio");
+        formContent.add("type", ctx.type.getText()).add("name", ctx.name.getText()).add("value", ctx.value.getText());
+        return formContent;
+    }
+
+    @Override
+    public ST visitFormJustLabel(p32Parser.FormJustLabelContext ctx) {
+        ST formContent = templates.getInstanceOf("formJustLabel");
+        formContent.add("label_name", cleanString(ctx.label_name.getText()));
+        return formContent;
+    }
+    @Override
+    public ST visitFooterElement(p32Parser.FooterElementContext ctx) {
+        ST footer = templates.getInstanceOf("footerElement");
+        ctx.content().forEach(c -> {
+            if (c.bodyElement() != null) {
+                footer.add("content", visit(c.bodyElement()));
+            } else {
+                footer.add("content", cleanString(c.getText()));
+            }
+        });
+        return footer;
+    }
+
+    @Override
+    public ST visitHeaderElement(p32Parser.HeaderElementContext ctx) {
+        ST header = templates.getInstanceOf("headerElement");
+        ctx.content().forEach(c -> {
+            if (c.bodyElement() != null) {
+                header.add("content", visit(c.bodyElement()));
+            } else {
+                header.add("content", cleanString(c.getText()));
+            }
+        });
+        return header;
+    }
+    @Override
+    public ST visitTableElement(p32Parser.TableElementContext ctx) {
+        ST table = templates.getInstanceOf("table");
+        ctx.tableRow().forEach(row -> table.add("rows", visit(row)));
+        return table;
+    }
+
+    @Override
+    public ST visitTableRow(p32Parser.TableRowContext ctx) {
+        ST row = templates.getInstanceOf("tableRow");
+        ctx.tableCell().forEach(cell -> row.add("cells", visit(cell)));
+        return row;
+    }
+
+    @Override
+    public ST visitTableCell(p32Parser.TableCellContext ctx) {
+        StringBuilder content = new StringBuilder();
+        ctx.content().forEach(c -> content.append(visit(c).render()));
+        return templates.getInstanceOf("tableCell")
+                .add("content", content.toString());
+    }
+
+    // List item element
+    @Override
+    public ST visitListItemElement(p32Parser.ListItemElementContext ctx) {
+        StringBuilder content = new StringBuilder();
+        ctx.content().forEach(c -> content.append(visit(c).render()));
+        return templates.getInstanceOf("listItemElement")
+                .add("content", content.toString());
+    }
+
+    // Unordered list
+    @Override
+    public ST visitUnorderedListElement(p32Parser.UnorderedListElementContext ctx) {
+        ST listTemplate = templates.getInstanceOf("unorderedList");
+        ctx.content().forEach(c -> listTemplate.add("items", visit(c)));
+        return listTemplate;
+    }
+
+    // Ordered list
+    @Override
+    public ST visitOrderedListElement(p32Parser.OrderedListElementContext ctx) {
+        ST listTemplate = templates.getInstanceOf("orderedList");
+        ctx.content().forEach(c -> listTemplate.add("items", visit(c)));
+        return listTemplate;
+    }
+
+    // Underline text
+    @Override
+    public ST visitUnderlineText(p32Parser.UnderlineTextContext ctx) {
+        String text = cleanString(ctx.STRING().getText());
+        return templates.getInstanceOf("underlineText")
+                .add("content", text);
     }
 }

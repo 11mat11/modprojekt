@@ -59,8 +59,12 @@ imageElement(src, alt) ::= <<
 <img src="«src»" alt="«alt»">
 >>
 
-textFormat(tag, content) ::= <<
-<«tag»>«content»</«tag»>
+boldText(content) ::= <<
+<strong>«content»</strong>
+>>
+
+italicText(content) ::= <<
+<em>«content»</em>
 >>
 
 lineBreak() ::= <<
@@ -73,4 +77,73 @@ codeElement(code) ::= <<
 
 plainText(text) ::= <<
 «text»
+>>
+formElement(elements) ::= <<
+<form action="submit.php" method="POST">
+«elements; separator="\n"»
+</form>
+>>
+
+formField(type,name,label_name, id) ::= <<
+<label for=«id»>«label_name»</label>
+<input type=«type» id=«id» name=«name» required>
+>>
+
+formButton(type,value) ::= <<
+<input type=«type» value=«value»>
+>>
+
+formJustLabel(label_name) ::= <<
+<label>«label_name»</label>
+>>
+
+formCheckBoxRadio(type,name,value) ::= <<
+<input type=«type» name=«name» value=«value»>
+>>
+
+footerElement(content) ::= <<
+<footer>«content»</footer>
+>>
+
+headerElement(content) ::= <<
+<header>«content»</header>
+>>
+
+table(rows) ::= <<
+<table>
+«rows; separator="\n"»
+</table>
+>>
+
+tableRow(cells) ::= <<
+  <tr>
+    «cells:{cell | <td>«cell.content»</td>}; separator="\n    "»
+  </tr>
+>>
+
+tableCell(content) ::= <<
+«content»
+>>
+spanElement(content) ::= <<
+<span>«content»</span>
+>>
+
+listItemElement(content) ::= <<
+<li>«content»</li>
+>>
+
+unorderedList(items) ::= <<
+<ul>
+«items; separator="\n"»
+</ul>
+>>
+
+orderedList(items) ::= <<
+<ol>
+«items; separator="\n"»
+</ol>
+>>
+
+underlineText(content) ::= <<
+<u>«content»</u>
 >>

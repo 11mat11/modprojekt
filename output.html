@@ -1,20 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="https://example.com">
-<link rel="stylesheet" href="styles.css">
-<style>body {color: red}</style>
+<meta charset="UTF-8">
+<title>Kompletny Test Strony</title>
+<base href="https://test.com">
+<link rel="stylesheet" href="style.css">
+<style>body {color: red;}</style>
 </head>
 <body>
-<h1>Nagłówek</h1>
-<a href="https://example.com">Kliknij mnie!</a>
-<img src="image.jpg" alt="Logo">
-<strong>Pogrubienie</strong>
-<em>Kursywa</em>
-<h2>no co </h2>
+<h1>Nagłówek 1</h1>
+<h2>Nagłówek 2</h2>
+<h3>Nagłówek 3</h3>
+<h4>Nagłówek 4</h4>
+<h5>Nagłówek 5</h5>
+<h6>Nagłówek 6</h6>
+<p>Akapit z <strong>pogrubienie</strong> i <em>kursywą</em></p>
+<strong>pogrubienie</strong>
+<div>Div z <span>spanem</span> i obrazkiem: <img src="image.jpg" alt="Alt"></div>
+<ul>
+<li>Lista <strong>pogrubienie</strong>nieuporządkowana:</li>
+<li>Element <strong>pogrubienie</strong> 1</li>
+<li>Element 2</li>
+</ul>
+<ol>
+<li>Lista <strong>pogrubienie</strong>uporządkowana:</li>
+<li>Punkt A</li>
+<li>Punkt B</li>
+</ol>
+<a href="https://example.com">Hiperłącze</a>
+<u>Podkr eślenie</u>
 <br>
-<h2>tam</h2>
-<code>console.log('test')</code>
-Zwykły tekst
+ br
+<br>
+<code>let x = 5;</code>
+<table>
+  <tr>
+    <td>Nagłówek 1</td>
+        <td>Nagłówek 2</td>
+  </tr>
+  <tr>
+    <td>Dane\ A</td>
+        <td>Dane <strong>pogrubienie</strong>B</td>
+  </tr>
+  <tr>
+    <td>Dane C</td>
+        <td>Dane D</td>
+  </tr>
+</table>
+<form action="submit.php" method="POST">
+<label>Etykieta:</label>
+<label for=form_0>Imię:</label>
+<input type="text" id=form_0 name="imie" required>
+<label for=form_1>Email:</label>
+<input type="email" id=form_1 name="mail" required>
+<label for=form_2>Hasło:</label>
+<input type="password" id=form_2 name="haslo" required>
+<input type="submit" value="Wyślij">
+<input type="checkbox" name="zgoda" value="1">
+Akceptuję
+<input type="radio" name="plec" value="M">
+Mężczyzna
+</form>
+<header>Nagłówek <strong>pogrubienie</strong>Sekcji</header>
+<footer>Stopka © 2025</footer>
 </body>
 </html>

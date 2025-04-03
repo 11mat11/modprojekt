@@ -1,15 +1,55 @@
 |{
-@ "https://example.com" /@
-? "styles.css" /?
-` "body {color: red}" /`
+;"UTF-8"/;
+*"Kompletny Test Strony"/*
+@"https://test.com"/@
+?"style.css"/?
+`"body {color: red;}"/`
 }|
 !{
-# "Nagłówek"
-? "https://example.com" /| "Kliknij mnie!" /?
-= "image.jpg" /| "Logo" /=
-^ "Pogrubienie" /^
-_ "Kursywa" /_
-##"no co "+ ##"tam"
-` "console.log('test')" /`
-"Zwykły tekst"
+# "Nagłówek 1"
+## "Nagłówek 2"
+### "Nagłówek 3"
+#### "Nagłówek 4"
+##### "Nagłówek 5"
+###### "Nagłówek 6"
+
+*"Akapit z " ^ "pogrubienie" /^ " i " _"kursywą" /_/*
+^ "pogrubienie" /^
+@"Div z " %"spanem"/% " i obrazkiem: " ="image.jpg"/|"Alt"/= /@
+
+&
+-"Lista "^ "pogrubienie" /^"nieuporządkowana:"/-
+-"Element "^ "pogrubienie" /^" 1"/-
+-"Element 2"/-
+/&
+
+$
+-"Lista "^ "pogrubienie" /^"uporządkowana:"/-
+-"Punkt A"/-
+-"Punkt B"/-
+/$
+
+?"https://example.com"/|"Hiperłącze"/?
+~"Podkr eślenie"/~
++" br"+
+`"let x = 5;"/`
+
+[
+|"Nagłówek 1"|"Nagłówek 2"+|
+|"Dane\" A"|"Dane "^ "pogrubienie" /^"B"+|
+|"Dane C"|"Dane D" +|
+]
+
+F
+("Etykieta:")
+(t="text" n="imie" "Imię:")
+(t="email" n="mail" "Email:")
+(t="password" n="haslo" "Hasło:")
+(t="submit" v="Wyślij")
+(t="checkbox" n="zgoda" v="1") "Akceptuję"
+(t="radio" n="plec" v="M" ) "Mężczyzna"
+/F
+
+, "Nagłówek "^ "pogrubienie" /^"Sekcji"/,
+. "Stopka © 2025"/.
 }!

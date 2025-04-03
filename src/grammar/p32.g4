@@ -12,7 +12,13 @@ headElement
     | '?' STRING '/?'               # linkElement
     | '`' STRING '/`'               # styleElement
     ;
+tableRow
+    : '|' tableCell ('|' tableCell)* '+|'
+    ;
 
+tableCell
+    : content*
+    ;
 bodyElement
     : heading                      # headingElement
     | '*' content* '/*'            # paragraphElement
@@ -28,8 +34,19 @@ bodyElement
     | '~' STRING '/~'              # underlineText
     | '+'             # lineBreak
     | '`' STRING '/`'              # codeElement
-    | '[' tableHeader '|' tableRow* ']' # tableElement
+    | '[' tableRow+ ']'            # tableElement
     | STRING                       # plainText
+    | 'F' content* '/F'   # formElement
+    | formContent #formContent_1
+    | '.' content* '/.'            #footerElement
+    | ',' content* '/,'            #headerElement
+    ;
+
+formContent
+    : '(' label_name=STRING ')'                                                 # formJustLabel
+    | '(' 't=' type=STRING  'n=' name=STRING (label_name=STRING)* ')'           # formField
+    | '(' 't=' type=STRING  'v=' value=STRING ')'                               # formButton
+    | '(' 't=' type=STRING 'n=' name=STRING 'v=' value=STRING ')'               # formCheckBoxRadio
     ;
 
 heading
@@ -45,11 +62,6 @@ content
     : bodyElement
     | STRING
     ;
-
-tableHeader: tableCell ('|' tableCell)*;
-tableRow: '|' tableCell ('|' tableCell)* '|';
-tableCell: content*;
-
 
 STRING: '"' (~["\\] | '\\' .)* '"';
 WS: [ \t\r\n]+ -> skip;
