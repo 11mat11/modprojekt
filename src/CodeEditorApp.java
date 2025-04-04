@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import compiler.StartCompiler; // Importujemy klasę StartCompiler
+import compiler.StartCompiler;
 
 public class CodeEditorApp extends JFrame {
     private JTextArea codeArea;

@@ -5,8 +5,6 @@ import grammar.p32BaseVisitor;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class EmitVisitor extends p32BaseVisitor<ST> {
     private final STGroup templates;
@@ -77,7 +75,7 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
         return templates.getInstanceOf("styleElement").add("styles", styles);
     }
 
-    // Przykładowe poprawki dla kilku elementów:
+    //
     @Override
     public ST visitParagraphElement(p32Parser.ParagraphElementContext ctx) {
         ST paragraph = templates.getInstanceOf("paragraphElement");
@@ -150,12 +148,11 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
         return templates.getInstanceOf("plainText")
                 .add("text", cleanString(ctx.STRING().getText()));
     }
+    //H1-H6
     @Override
     public ST visitHeadingElement(p32Parser.HeadingElementContext ctx) {
-        // Pobierz kontekst konkretnego nagłówka (h1-h6)
         p32Parser.HeadingContext headingCtx = ctx.heading();
 
-        // Pobierz poziom nagłówka na podstawie liczby '#'
         int level = headingCtx.getStart().getText().length();
 
         String text = cleanString(headingCtx.getChild(1).getText());
@@ -166,7 +163,7 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
     }
 
     private String cleanString(String input) {
-        // Usuń otaczające cudzysłowy i escapowanie
+        // Usuń otaczające cudzysłowy
         return input.substring(1, input.length() - 1)
                 .replace("\"", "")
                 .replace("\"", "");
@@ -177,13 +174,6 @@ public class EmitVisitor extends p32BaseVisitor<ST> {
         ctx.content().forEach(element -> formElement.add("elements", visit(element)));
         return formElement;
     }
-
-//    @Override
-//    public ST visitFormContent(p32Parser.FormContentContext ctx) {
-//        ST formContent = templates.getInstanceOf("formContent");
-//        formContent.add("name", ctx.name.getText()).add("type", ctx.type.getText()).add("label_name", ctx.label_name.getText()).add("id", "form_" + formLabelCounter++);
-//        return formContent;
-//    }
 
     @Override
     public ST visitFormField(p32Parser.FormFieldContext ctx) {

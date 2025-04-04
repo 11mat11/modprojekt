@@ -3,7 +3,8 @@
 *"Kompletny Test Strony"/*
 @"https://test.com"/@
 ?"style.css"/?
-`"body {color: red;}"/`
+`"body {color: red; background-color: green;};
+"/`
 }|
 !{
 # "Nagłówek 1"
@@ -24,7 +25,7 @@
 /&
 
 $
--"Lista "^ "pogrubienie" /^"uporządkowana:"/-
+-"Lista uporządkowana:"/-
 -"Punkt A"/-
 -"Punkt B"/-
 /$
